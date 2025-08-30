@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,26 +25,26 @@ import java.util.Set;
 @Entity
 @Table(name = "tb_product")
 public class Product {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    
+
     @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
-    private String imgUri;
-    
+    private String imgUrl;
+
     @ManyToMany
     @JoinTable(name = "tb_product_category",
-    joinColumns = @JoinColumn(name = "product_id"),
-    inverseJoinColumns = @JoinColumn(name = "category_id"))
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
-    
+
     @OneToMany(mappedBy = "id.product")
     private Set<OrderItem> items = new HashSet<>();
-    
+
     public Product() {
     }
 
@@ -52,7 +53,7 @@ public class Product {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.imgUri = imgUri;
+        this.imgUrl = imgUri;
     }
 
     public Long getId() {
@@ -88,16 +89,23 @@ public class Product {
     }
 
     public String getImgUri() {
-        return imgUri;
+        return imgUrl;
     }
 
     public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
+        this.imgUrl = imgUri;
     }
 
     public Set<Category> getCategories() {
         return categories;
     }
-    
-    
+
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+
+    public List<Order> getOrders() {
+        return items.stream().map(x -> x.getOrder()).toList();
+    }
+
 }
