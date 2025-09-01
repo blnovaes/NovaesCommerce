@@ -7,8 +7,9 @@ package com.novaes.NovaesCommerce.services;
 import com.novaes.NovaesCommerce.dto.ProductDTO;
 import com.novaes.NovaesCommerce.entities.Product;
 import com.novaes.NovaesCommerce.repositories.ProductRepository;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,4 +46,20 @@ public class ProductService {
         return result.map(x -> new ProductDTO(x));
     } 
     
+        @Transactional()
+    public ProductDTO insert(ProductDTO dto){
+        
+        Product entity = new Product();
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setImgUri(dto.getImgUrl());
+        entity.setPrice(dto.getPrice()); 
+        
+        entity = repository.save(entity);
+        
+        return new ProductDTO(entity);
+    } 
+    
+    
 }
+
