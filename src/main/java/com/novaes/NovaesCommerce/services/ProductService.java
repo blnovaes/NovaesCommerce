@@ -53,7 +53,7 @@ public class ProductService {
         return new ProductDTO(entity);
     }
 
-    @Transactional()
+    @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         Product entity = repository.getReferenceById(id);
         copyDtoToEntity(dto, entity);
@@ -62,6 +62,11 @@ public class ProductService {
         return new ProductDTO(entity);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+    
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
