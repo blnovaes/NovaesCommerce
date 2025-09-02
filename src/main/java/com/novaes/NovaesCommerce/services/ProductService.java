@@ -7,7 +7,7 @@ package com.novaes.NovaesCommerce.services;
 import com.novaes.NovaesCommerce.dto.ProductDTO;
 import com.novaes.NovaesCommerce.entities.Product;
 import com.novaes.NovaesCommerce.repositories.ProductRepository;
-import java.util.Optional;
+import com.novaes.NovaesCommerce.services.exceptions.ResorceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,10 +32,10 @@ public class ProductService {
      */
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Optional<Product> result = repository.findById(id);
-        Product product = result.get();
-        ProductDTO dto = new ProductDTO(product);
-        return dto;
+            Product product = repository.findById(id)
+                    .orElseThrow(()-> new ResorceNotFoundException("Recurso não encontrado"));
+            return new ProductDTO(product);
+
     }
 
     @Transactional(readOnly = true)
@@ -66,7 +66,7 @@ public class ProductService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
-    
+
     private void copyDtoToEntity(ProductDTO dto, Product entity) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
