@@ -7,9 +7,7 @@ package com.novaes.NovaesCommerce.services;
 import com.novaes.NovaesCommerce.dto.ProductDTO;
 import com.novaes.NovaesCommerce.entities.Product;
 import com.novaes.NovaesCommerce.repositories.ProductRepository;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,43 +21,52 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ProductService {
-    
+
     @Autowired
     private ProductRepository repository;
-    
+
     /**
      *
      * @param id
      * @return
      */
     @Transactional(readOnly = true)
-    public ProductDTO findById(Long id){
+    public ProductDTO findById(Long id) {
         Optional<Product> result = repository.findById(id);
         Product product = result.get();
         ProductDTO dto = new ProductDTO(product);
         return dto;
     }
- 
-        @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(Pageable pageable){
+
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> findAll(Pageable pageable) {
         Page<Product> result = repository.findAll(pageable);
         return result.map(x -> new ProductDTO(x));
-    } 
-    
-        @Transactional()
-    public ProductDTO insert(ProductDTO dto){
-        
+    }
+
+    @Transactional()
+    public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
+        copyDtoToEntity(dto, entity);
+        entity = repository.save(entity);
+
+        return new ProductDTO(entity);
+    }
+
+    @Transactional()
+    public ProductDTO update(Long id, ProductDTO dto) {
+        Product entity = repository.getReferenceById(id);
+        copyDtoToEntity(dto, entity);
+        entity = repository.save(entity);
+
+        return new ProductDTO(entity);
+    }
+
+    private void copyDtoToEntity(ProductDTO dto, Product entity) {
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setImgUri(dto.getImgUrl());
-        entity.setPrice(dto.getPrice()); 
-        
-        entity = repository.save(entity);
-        
-        return new ProductDTO(entity);
-    } 
-    
-    
-}
+        entity.setPrice(dto.getPrice());
+    }
 
+}
