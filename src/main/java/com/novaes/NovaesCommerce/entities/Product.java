@@ -31,7 +31,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
+    
     @Column(columnDefinition = "TEXT")
     private String description;
     private Double price;
@@ -49,12 +49,12 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String name, String description, Double price, String imgUri) {
+    public Product(Long id, String name, String description, Double price, String imgUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.imgUrl = imgUri;
+        this.imgUrl = imgUrl;
     }
 
     public Long getId() {
@@ -89,12 +89,12 @@ public class Product {
         this.price = price;
     }
 
-    public String getImgUri() {
+    public String getImgUrl() {
         return imgUrl;
     }
 
-    public void setImgUri(String imgUri) {
-        this.imgUrl = imgUri;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public Set<Category> getCategories() {
@@ -110,25 +110,17 @@ public class Product {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id);
-        return hash;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        return Objects.equals(id, product.id);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Product other = (Product) obj;
-        return Objects.equals(this.id, other.id);
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
-    
 }

@@ -8,10 +8,10 @@ package com.novaes.NovaesCommerce.services.exceptions;
  *
  * @author blnov
  */
-public class ResorceNotFoundException extends RuntimeException {
+@SuppressWarnings("serial")
+public class DatabaseException extends RuntimeException {
 
-    public ResorceNotFoundException(String msg) {
+    public DatabaseException(String msg) {
         super(msg);
     }
-
 }
